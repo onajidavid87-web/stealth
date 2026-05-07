@@ -1,0 +1,52 @@
+.event-mail-hero {
+  contain: paint;
+  isolation: isolate;
+  background:
+    radial-gradient(520px 240px at 24% 16%, oklch(0.72 0.006 270 / 0.32), transparent 66%),
+    radial-gradient(520px 260px at 76% 8%, oklch(0.45 0.006 270 / 0.22), transparent 68%),
+    linear-gradient(122deg, oklch(0.52 0.005 270 / 0.92), oklch(0.22 0.005 270 / 0.96) 48%, oklch(0.15 0.005 270 / 0.98));
+}
+
+.event-mail-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(105deg, oklch(1 0 0 / 0.16), transparent 28%),
+    radial-gradient(700px 180px at 50% 116%, oklch(0 0 0 / 0.72), transparent 66%);
+  pointer-events: none;
+}
+
+.event-mail-ridges {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -60px;
+  height: 142px;
+  transform: rotate(-1.5deg) skewX(-14deg);
+  transform-origin: center bottom;
+  background:
+    repeating-linear-gradient(
+      100deg,
+      oklch(1 0 0 / 0.42) 0 1px,
+      oklch(0.16 0.004 270 / 0.98) 1px 9px,
+      oklch(0 0 0 / 0.98) 9px 15px
+    );
+  border-top: 1px solid oklch(1 0 0 / 0.18);
+  box-shadow: 0 -24px 42px -26px oklch(1 0 0 / 0.45), 0 -10px 30px oklch(0 0 0 / 0.7) inset;
+}
+
+.event-mail-ridges::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, oklch(0 0 0 / 0.58), transparent 28%, transparent 68%, oklch(0 0 0 / 0.72));
+}
+
+.event-calendar-card {
+  background:
+    linear-gradient(145deg, oklch(1 0 0 / 0.2), oklch(1 0 0 / 0.075) 40%, oklch(0 0 0 / 0.24)),
+    oklch(0.21 0.005 270 / 0.5);
+  backdrop-filter: blur(28px) saturate(145%);
+  -webkit-backdrop-filter: blur(28px) saturate(145%);
+}

@@ -1,32 +1,35 @@
 import { motion } from "framer-motion";
-import { Star, Paperclip } from "lucide-react";
-import type { Email } from "./data";
+import { getEmailsForFolder, getFolderLabel, type Email, type MailFolder } from "./data";
 import { cn } from "@/lib/utils";
 
 export function EmailList({
-  emails, selectedId, onSelect, folder,
+  emails,
+  selectedId,
+  onSelect,
+  folder,
 }: {
   emails: Email[];
   selectedId: string | null;
   onSelect: (id: string) => void;
-  folder: string;
+  folder: MailFolder;
 }) {
-  const filtered = emails.filter((e) => folder === "starred" ? e.starred : e.folder === folder || folder === "inbox");
+  const filtered = getEmailsForFolder(emails, folder);
+  const folderLabel = getFolderLabel(folder);
 
   return (
-    <section className="glass relative m-3 flex h-[calc(100vh-1.5rem-3.5rem-0.75rem)] w-full flex-col overflow-hidden rounded-2xl md:w-[360px] md:shrink-0">
-      <div className="flex items-center justify-between border-b border-white/5 px-4 py-3">
+    <section className="mail-list-atmosphere relative m-3 flex h-[calc(100vh-3.5rem-1.5rem)] w-full flex-col overflow-hidden rounded-lg md:w-[328px] md:shrink-0 lg:w-[336px]">
+      <div className="relative z-10 flex items-center justify-between border-b border-white/10 bg-white/[0.025] px-3.5 py-3 backdrop-blur-sm">
         <div>
-          <h2 className="text-sm font-semibold capitalize tracking-tight text-foreground">{folder}</h2>
-          <p className="text-[11px] text-muted-foreground">{filtered.length} conversations</p>
+          <h2 className="text-[13px] font-semibold leading-5 tracking-normal text-foreground">{folderLabel}</h2>
+          <p className="text-[11px] leading-4 text-muted-foreground">{filtered.length} conversations</p>
         </div>
-        <div className="flex items-center gap-1 rounded-lg border border-white/5 bg-white/[0.03] p-0.5 text-[11px]">
+        <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.04] p-0.5 text-[11px] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
           {["All", "Unread", "Flagged"].map((t, i) => (
             <button
               key={t}
               className={cn(
                 "rounded-md px-2.5 py-1 transition",
-                i === 0 ? "bg-white/[0.08] text-foreground" : "text-muted-foreground hover:text-foreground"
+                i === 0 ? "bg-white/[0.1] text-foreground" : "text-muted-foreground hover:text-foreground",
               )}
             >
               {t}
@@ -35,7 +38,12 @@ export function EmailList({
         </div>
       </div>
 
-      <ul className="scrollbar-thin flex-1 overflow-y-auto p-2 divide-y divide-white/[0.04]">
+      <ul className="scrollbar-thin relative z-10 flex-1 space-y-2 overflow-y-auto p-2.5">
+        {filtered.length === 0 && (
+          <li className="px-3 py-10 text-center text-xs text-muted-foreground">
+            No conversations in {folderLabel.toLowerCase()} yet.
+          </li>
+        )}
         {filtered.map((e, idx) => {
           const active = selectedId === e.id;
           return (
@@ -47,25 +55,29 @@ export function EmailList({
             >
               <motion.button
                 onClick={() => onSelect(e.id)}
-                whileTap={{ scale: 0.995 }}
+                whileTap={{ scale: 0.975 }}
+                transition={{ type: "spring", stiffness: 520, damping: 30 }}
                 className={cn(
-                  "group relative flex w-full items-start gap-3 rounded-xl px-3 text-left transition",
-                  "hover:bg-white/[0.04]",
+                  "mail-preview-card group relative flex w-full items-start gap-3 px-3 text-left transition-[background,border-color,box-shadow,transform] duration-300",
                   active
-                    ? "my-1.5 py-3 bg-white/[0.14] backdrop-blur-xl shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7),0_0_0_1px_oklch(1_0_0_/_0.12)] -translate-y-px"
-                    : "py-2"
+                    ? "-translate-y-px border-white/25 bg-[rgba(126,126,138,0.42)] py-2 shadow-[0_18px_42px_rgba(22,22,28,0.3),0_0_0_1px_rgba(255,255,255,0.08),inset_0_1px_0_rgba(255,255,255,0.2)]"
+                    : "py-2.5",
                 )}
               >
                 {active && (
                   <motion.span
                     layoutId="email-active"
-                    className="absolute inset-0 rounded-xl ring-1 ring-white/20"
+                    className="pointer-events-none absolute inset-0 rounded-[14px] ring-1 ring-white/20"
+                    style={{
+                      background:
+                        "radial-gradient(circle at 18% 22%, rgba(255,255,255,0.18), transparent 34%), linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04) 42%, rgba(255,255,255,0.015))",
+                    }}
                     transition={{ type: "spring", stiffness: 400, damping: 32 }}
                   />
                 )}
                 <div className={cn(
-                  "relative shrink-0 overflow-hidden rounded-full ring-1 ring-white/10",
-                  active ? "h-9 w-9" : "h-7 w-7"
+                  "relative shrink-0 overflow-hidden rounded-full ring-1 ring-white/15 shadow-[0_8px_18px_-12px_rgba(0,0,0,0.9)]",
+                  active ? "h-[30px] w-[30px]" : "h-7 w-7"
                 )}>
                   <img
                     src={`https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(e.from)}&backgroundColor=1a1a1d`}
@@ -76,31 +88,27 @@ export function EmailList({
                   {e.unread && <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-[oklch(0.9_0.005_270)] ring-2 ring-[oklch(0.18_0.005_270)]" />}
                 </div>
                 <div className="relative min-w-0 flex-1">
-                  <div className="flex items-baseline justify-between gap-2">
-                    <span className={cn("truncate text-sm", e.unread ? "font-semibold text-foreground" : "text-foreground/85")}>
+                  <div className="flex items-start justify-between gap-2">
+                    <span
+                      className={cn(
+                        "mail-preview-heading truncate text-[13.5px] font-semibold leading-5 text-foreground/88",
+                        e.unread && "text-foreground/94",
+                      )}
+                    >
                       {e.from}
                     </span>
-                    <span className="shrink-0 text-[11px] tabular-nums text-muted-foreground">{e.time}</span>
+                    <span className="shrink-0 pt-0.5 text-[10.5px] font-medium leading-4 tabular-nums text-muted-foreground/85">
+                      {e.time}
+                    </span>
                   </div>
-                  <div className={cn("truncate text-[13px]", e.unread ? "text-foreground/95" : "text-foreground/75")}>
+                  <div
+                    className={cn(
+                      "mail-preview-subheading mt-0.5 truncate text-[12.25px] font-semibold leading-4 text-foreground/68",
+                      e.unread && "text-foreground/78",
+                    )}
+                  >
                     {e.subject}
                   </div>
-                  {active && (
-                    <div className="mt-0.5 flex items-center gap-2">
-                      <p className="truncate text-[11.5px] text-muted-foreground">{e.preview}</p>
-                    </div>
-                  )}
-                  {active && (e.labels?.length || e.attachments?.length || e.starred) && (
-                    <div className="mt-1.5 flex items-center gap-1.5">
-                      {e.starred && <Star className="h-3 w-3 fill-[oklch(0.85_0.005_270)] text-[oklch(0.85_0.005_270)]" />}
-                      {e.attachments?.length ? <Paperclip className="h-3 w-3 text-muted-foreground" /> : null}
-                      {e.labels?.map((l) => (
-                        <span key={l} className="rounded-md border border-white/10 bg-white/[0.04] px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                          {l}
-                        </span>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </motion.button>
             </motion.li>

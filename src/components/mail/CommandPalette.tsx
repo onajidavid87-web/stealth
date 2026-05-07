@@ -1,10 +1,12 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { Search, Inbox, Star, Pencil, Settings, Archive, Send } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Archive, Inbox, Mail, Pencil, Search, Send, Settings, ShieldCheck, Star } from "lucide-react";
 
 const items = [
-  { icon: Pencil, label: "Compose new email", hint: "⌘N" },
+  { icon: Pencil, label: "Compose new message", hint: "Ctrl+N" },
   { icon: Inbox, label: "Go to Inbox", hint: "G I" },
+  { icon: Mail, label: "Go to All Mail", hint: "G A" },
+  { icon: ShieldCheck, label: "Go to Verified", hint: "G V" },
   { icon: Star, label: "Go to Starred", hint: "G S" },
   { icon: Send, label: "Go to Sent", hint: "G T" },
   { icon: Archive, label: "Archive thread", hint: "E" },
@@ -13,21 +15,29 @@ const items = [
 
 export function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [q, setQ] = useState("");
-  useEffect(() => { if (!open) setQ(""); }, [open]);
+
   useEffect(() => {
-    const h = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    if (!open) setQ("");
+  }, [open]);
+
+  useEffect(() => {
+    const h = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
   }, [onClose]);
 
-  const filtered = items.filter(i => i.label.toLowerCase().includes(q.toLowerCase()));
+  const filtered = items.filter((item) => item.label.toLowerCase().includes(q.toLowerCase()));
 
   return (
     <AnimatePresence>
       {open && (
         <>
           <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={onClose}
             className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
           />
@@ -41,11 +51,15 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
             <div className="flex items-center gap-3 border-b border-white/5 px-4 py-3">
               <Search className="h-4 w-4 text-muted-foreground" />
               <input
-                autoFocus value={q} onChange={(e) => setQ(e.target.value)}
-                placeholder="Type a command or search…"
+                autoFocus
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Type a command or search..."
                 className="w-full bg-transparent text-sm placeholder:text-muted-foreground/70 focus:outline-none"
               />
-              <kbd className="rounded border border-white/10 bg-black/30 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">ESC</kbd>
+              <kbd className="rounded border border-white/10 bg-black/30 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                ESC
+              </kbd>
             </div>
             <ul className="max-h-80 overflow-y-auto p-2">
               {filtered.map((it) => (
@@ -53,7 +67,9 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
                   <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-foreground/90 transition hover:bg-white/[0.06]">
                     <it.icon className="h-4 w-4 text-muted-foreground" />
                     <span>{it.label}</span>
-                    <span className="ml-auto rounded-md border border-white/10 bg-black/30 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">{it.hint}</span>
+                    <span className="ml-auto rounded-md border border-white/10 bg-black/30 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                      {it.hint}
+                    </span>
                   </button>
                 </li>
               ))}

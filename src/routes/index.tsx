@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { AmbientBackground } from "@/components/mail/AmbientBackground";
 import { Sidebar } from "@/components/mail/Sidebar";
@@ -8,28 +8,37 @@ import { EmailList } from "@/components/mail/EmailList";
 import { EmailView } from "@/components/mail/EmailView";
 import { Compose } from "@/components/mail/Compose";
 import { CommandPalette } from "@/components/mail/CommandPalette";
-import { emails } from "@/components/mail/data";
+import { emails, getEmailsForFolder, mailFolders, type MailFolder } from "@/components/mail/data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Aether Mail — Premium AI email client" },
-      { name: "description", content: "Stealth — the first email protocol on the Stellar blockchain." },
+      { title: "Stealth - Stellar Mail Protocol" },
+      { name: "description", content: "Stealth is a cryptographic mail client built on Stellar." },
       { property: "og:title", content: "Stealth" },
-      { property: "og:description", content: "Stealth — the first email protocol on the Stellar blockchain." },
+      { property: "og:description", content: "Cryptographic mail identities, postage, and delivery proofs on Stellar." },
     ],
   }),
   component: MailApp,
 });
 
 function MailApp() {
-  const [folder, setFolder] = useState<any>("inbox");
+  const [folder, setFolder] = useState<MailFolder>("inbox");
   const [selectedId, setSelectedId] = useState<string | null>(emails[0].id);
   const [collapsed, setCollapsed] = useState(false);
   const [composeOpen, setComposeOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
+  const folderCounts = useMemo(
+    () =>
+      Object.fromEntries(mailFolders.map((item) => [item.key, getEmailsForFolder(emails, item.key).length])) as Record<
+        MailFolder,
+        number
+      >,
+    [],
+  );
+  const visibleEmails = useMemo(() => getEmailsForFolder(emails, folder), [folder]);
   const selected = emails.find((e) => e.id === selectedId) ?? null;
 
   useEffect(() => {
@@ -41,20 +50,26 @@ function MailApp() {
     return () => window.removeEventListener("keydown", h);
   }, []);
 
-  // demo notification
   useEffect(() => {
-    const t = setTimeout(() => setToast("Lina Park sent a new message"), 1200);
+    const t = setTimeout(() => setToast("Federation proof verified for eve*stealth.xyz"), 1200);
     const t2 = setTimeout(() => setToast(null), 5200);
     return () => { clearTimeout(t); clearTimeout(t2); };
   }, []);
+
+  useEffect(() => {
+    if (!visibleEmails.some((email) => email.id === selectedId)) {
+      setSelectedId(visibleEmails[0]?.id ?? null);
+    }
+  }, [folder, selectedId, visibleEmails]);
 
   return (
     <div className="relative min-h-screen text-foreground">
       <AmbientBackground />
 
-      <div className="flex">
+      <div className="flex min-h-screen">
         <Sidebar
           active={folder}
+          counts={folderCounts}
           onSelect={setFolder}
           collapsed={collapsed}
           onToggle={() => setCollapsed((v) => !v)}
