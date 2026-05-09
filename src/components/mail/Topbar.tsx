@@ -46,7 +46,7 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
   const accountRef = useRef<HTMLDivElement>(null);
 
   return (
-    <header className="glass relative m-0 flex h-14 items-center gap-2 rounded-none border-t-0 px-3">
+    <header className="glass relative z-50 m-0 flex h-14 items-center gap-2 rounded-none border-t-0 px-3">
       <motion.div
         animate={{ width: focused ? "min(34vw, 430px)" : "min(28vw, 360px)" }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -93,7 +93,7 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setFilterOpen(false)}
-                  className="fixed inset-0 z-40"
+                  className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md"
                 />
                 <motion.div
                   initial={{ opacity: 0, y: -8, scale: 0.96 }}
@@ -206,7 +206,7 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setAccountOpen(false)}
-                  className="fixed inset-0 z-40"
+                  className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md"
                 />
                 <motion.div
                   initial={{ opacity: 0, y: -8, scale: 0.96 }}
