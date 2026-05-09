@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Bell,
@@ -44,6 +45,35 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
 
   const filterRef = useRef<HTMLDivElement>(null);
   const accountRef = useRef<HTMLDivElement>(null);
+  const notificationsRef = useRef<HTMLDivElement>(null);
+
+  const [filterRect, setFilterRect] = useState<DOMRect | null>(null);
+  const [accountRect, setAccountRect] = useState<DOMRect | null>(null);
+  const [notifRect, setNotifRect] = useState<DOMRect | null>(null);
+
+  useLayoutEffect(() => {
+    if (filterOpen && filterRef.current) setFilterRect(filterRef.current.getBoundingClientRect());
+  }, [filterOpen]);
+  useLayoutEffect(() => {
+    if (accountOpen && accountRef.current) setAccountRect(accountRef.current.getBoundingClientRect());
+  }, [accountOpen]);
+  useLayoutEffect(() => {
+    if (notificationsOpen && notificationsRef.current) setNotifRect(notificationsRef.current.getBoundingClientRect());
+  }, [notificationsOpen]);
+
+  useEffect(() => {
+    const onResize = () => {
+      if (filterOpen && filterRef.current) setFilterRect(filterRef.current.getBoundingClientRect());
+      if (accountOpen && accountRef.current) setAccountRect(accountRef.current.getBoundingClientRect());
+      if (notificationsOpen && notificationsRef.current) setNotifRect(notificationsRef.current.getBoundingClientRect());
+    };
+    window.addEventListener("resize", onResize);
+    window.addEventListener("scroll", onResize, true);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("scroll", onResize, true);
+    };
+  }, [filterOpen, accountOpen, notificationsOpen]);
 
   return (
     <header className="glass relative z-50 m-0 flex h-14 items-center gap-2 rounded-none border-t-0 px-3">
@@ -84,7 +114,8 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
           >
             <Filter className="h-4 w-4" />
           </IconBtn>
-
+        </div>
+        {typeof document !== "undefined" && createPortal(
           <AnimatePresence>
             {filterOpen && (
               <>
@@ -93,14 +124,21 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setFilterOpen(false)}
-                  className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md"
+                  className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-xl"
                 />
                 <motion.div
                   initial={{ opacity: 0, y: -8, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.96 }}
                   transition={{ type: "spring", stiffness: 300, damping: 28 }}
-                  className="glass-modal absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl p-2"
+                  style={{
+                    position: "fixed",
+                    top: filterRect ? filterRect.bottom + 8 : 64,
+                    right: filterRect ? Math.max(8, window.innerWidth - filterRect.right) : 12,
+                    width: 224,
+                    zIndex: 110,
+                  }}
+                  className="glass-modal overflow-hidden rounded-xl p-2"
                 >
                   <div className="mb-2 px-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                     Filters
@@ -156,11 +194,12 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
                 </motion.div>
               </>
             )}
-          </AnimatePresence>
-        </div>
+          </AnimatePresence>,
+          document.body
+        )}
 
         {/* Notifications */}
-        <div className="relative">
+        <div ref={notificationsRef} className="relative">
           <IconBtn
             label="Notifications"
             onClick={() => setNotificationsOpen(!notificationsOpen)}
@@ -171,12 +210,12 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
               <span className="pulse-dot absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-[oklch(0.85_0.005_270)]" />
             </span>
           </IconBtn>
-
-          <NotificationsPanel
-            open={notificationsOpen}
-            onClose={() => setNotificationsOpen(false)}
-          />
         </div>
+        <NotificationsPanel
+          open={notificationsOpen}
+          onClose={() => setNotificationsOpen(false)}
+          anchorRect={notifRect}
+        />
 
         {/* Settings */}
         <IconBtn label="Settings" onClick={onOpenSettings}>
@@ -197,7 +236,8 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
             <span className="h-5 w-5 rounded-full" style={{ background: "linear-gradient(135deg,#7a8290,#2b2b31)" }} />
             <span className="hidden sm:inline">Personal</span>
           </button>
-
+        </div>
+        {typeof document !== "undefined" && createPortal(
           <AnimatePresence>
             {accountOpen && (
               <>
@@ -206,14 +246,21 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setAccountOpen(false)}
-                  className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md"
+                  className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-xl"
                 />
                 <motion.div
                   initial={{ opacity: 0, y: -8, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.96 }}
                   transition={{ type: "spring", stiffness: 300, damping: 28 }}
-                  className="glass-modal absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl"
+                  style={{
+                    position: "fixed",
+                    top: accountRect ? accountRect.bottom + 8 : 64,
+                    right: accountRect ? Math.max(8, window.innerWidth - accountRect.right) : 12,
+                    width: 224,
+                    zIndex: 110,
+                  }}
+                  className="glass-modal overflow-hidden rounded-xl"
                 >
                   {/* Account info */}
                   <div className="border-b border-white/5 p-3">
@@ -259,8 +306,9 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
                 </motion.div>
               </>
             )}
-          </AnimatePresence>
-        </div>
+          </AnimatePresence>,
+          document.body
+        )}
       </div>
 
       <AnimatePresence>
