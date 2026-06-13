@@ -497,7 +497,9 @@ function ReaderBody({ body }: { body: string }) {
                 <dt className="mail-reader-field text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                   {field.label}
                 </dt>
-                <dd className="break-words font-mono text-[12px] leading-5 text-foreground/86">{field.value}</dd>
+                <dd className="break-words font-mono text-[12px] leading-5 text-foreground/86">
+                  {field.value}
+                </dd>
               </div>
             ))}
           </dl>
