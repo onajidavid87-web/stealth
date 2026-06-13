@@ -107,7 +107,9 @@ export function EmailList({
                   "mail-preview-card group relative flex w-full items-start gap-3 px-3 text-left transition-[background,border-color,box-shadow,transform] duration-300",
                   active
                     ? "-translate-y-px border-white/15 bg-[oklch(0.38_0.007_270/0.55)] py-2 shadow-[0_18px_42px_oklch(0_0_0/0.35),0_0_0_1px_oklch(1_0_0/0.07),inset_0_1px_0_oklch(1_0_0/0.14)]"
-                    : "py-2.5",
+                    : compact
+                      ? "py-1.5"
+                      : "py-2.5",
                 )}
               >
                 {active && (
@@ -121,18 +123,24 @@ export function EmailList({
                     transition={{ type: "spring", stiffness: 400, damping: 32 }}
                   />
                 )}
-                <div className={cn(
-                  "relative shrink-0 overflow-hidden rounded-full ring-1 ring-white/15 shadow-[0_8px_18px_-12px_rgba(0,0,0,0.9)]",
-                  active ? "h-[30px] w-[30px]" : "h-7 w-7"
-                )}>
-                  <img
-                    src={`https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(e.from)}&backgroundColor=1a1a1d`}
-                    alt={e.from}
-                    loading="lazy"
-                    className="h-full w-full object-cover"
-                  />
-                  {e.unread && <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-[oklch(0.9_0.005_270)] ring-2 ring-[oklch(0.18_0.005_270)]" />}
-                </div>
+                {showAvatars && (
+                  <div
+                    className={cn(
+                      "relative shrink-0 overflow-hidden rounded-full ring-1 ring-white/15 shadow-[0_8px_18px_-12px_rgba(0,0,0,0.9)]",
+                      active ? "h-[30px] w-[30px]" : "h-7 w-7",
+                    )}
+                  >
+                    <img
+                      src={`https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(e.from)}&backgroundColor=1a1a1d`}
+                      alt={e.from}
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
+                    {e.unread && (
+                      <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-[oklch(0.9_0.005_270)] ring-2 ring-[oklch(0.18_0.005_270)]" />
+                    )}
+                  </div>
+                )}
                 <div className="relative min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
                     <span
