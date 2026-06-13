@@ -7,6 +7,7 @@ import { Topbar } from "@/components/mail/Topbar";
 import { EmailList } from "@/components/mail/EmailList";
 import { EmailView } from "@/components/mail/EmailView";
 import { Compose } from "@/components/mail/Compose";
+import { RightPanel } from "@/components/mail/RightPanel";
 import { CommandPalette } from "@/components/mail/CommandPalette";
 import { SettingsModal } from "@/components/mail/SettingsModal";
 import { emails as initialEmails, getEmailsForFolder, mailFolders, type Email, type MailFolder } from "@/components/mail/data";
@@ -45,7 +46,7 @@ function MailApp() {
   );
   const visibleEmails = useMemo(() => getEmailsForFolder(emails, folder), [emails, folder]);
   const selected = emails.find((e) => e.id === selectedId) ?? null;
-  
+
   const showToast = (message: string) => {
     setToast(message);
     setTimeout(() => setToast(null), 4000);
@@ -104,6 +105,15 @@ function MailApp() {
       updateEmail(e.id, { starred: !e.starred });
       showToast(e.starred ? "Removed star" : "Starred");
     },
+    onApproveSender: (e: Email) => {
+      updateEmail(e.id, { folder: "verified" });
+      showToast(`${e.from} can now mail you`);
+    },
+    onBlockSender: (e: Email) => {
+      updateEmail(e.id, { folder: "spam" });
+      showToast(`${e.from} blocked and postage marked for refund`);
+    },
+    onShowToast: showToast,
   };
 
   // Mark as read on selection
@@ -157,6 +167,7 @@ function MailApp() {
           <div className="flex min-w-0 flex-1">
             <EmailList emails={emails} selectedId={selectedId} onSelect={setSelectedId} folder={folder} />
             <EmailView email={selected} actions={emailActions} />
+            <RightPanel email={selected} onShowToast={showToast} />
           </div>
         </div>
       </div>
