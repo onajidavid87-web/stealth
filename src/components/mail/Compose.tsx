@@ -370,13 +370,13 @@ export function Compose({
                 Schedule
               </motion.button>
               <motion.button
-                whileHover={{ y: -1 }} 
+                whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handleSend(false)}
                 disabled={isSending}
                 className={cn(
                   "inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.08] px-3 py-1.5 text-xs font-medium text-foreground transition hover:bg-white/[0.14]",
-                  isSending && "opacity-50 cursor-not-allowed"
+                  isSending && "opacity-50 cursor-not-allowed",
                 )}
                 style={{ boxShadow: "0 8px 30px -10px rgba(0,0,0,0.6)" }}
               >
