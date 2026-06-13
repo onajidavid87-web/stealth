@@ -352,13 +352,13 @@ export function Compose({
                 >
                   <Smile className="h-4 w-4" />
                 </motion.button>
-                <EmojiPicker 
-                  open={emojiOpen} 
-                  onClose={() => setEmojiOpen(false)} 
+                <EmojiPicker
+                  open={emojiOpen}
+                  onClose={() => setEmojiOpen(false)}
                   onSelect={handleEmojiSelect}
                 />
               </div>
-              
+
               {/* Send button */}
               <motion.button
                 whileTap={{ scale: 0.97 }}
