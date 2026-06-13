@@ -1,25 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Check, Copy } from "lucide-react";
-
-/**
- * Detect an OTP / passkey / verification code in an email body.
- * Returns the digits string (4-8) or null.
- */
-export function detectOtp(body: string): string | null {
-  if (!body) return null;
-  // Look for keyword + nearby 4-8 digit code (with optional spaces/dashes)
-  const keyword = /(?:otp|one[-\s]?time(?:\s+password)?|passkey|pass\s?code|verification(?:\s+code)?|security\s+code|code|pin)\b[^\d]{0,40}((?:\d[\s-]?){4,8})/i;
-  const match = body.match(keyword);
-  if (match) {
-    const digits = match[1].replace(/\D/g, "");
-    if (digits.length >= 4 && digits.length <= 8) return digits;
-  }
-  // Fallback: a standalone 6-digit code on its own line
-  const standalone = body.match(/(?:^|\n)\s*(\d{6})\s*(?:\n|$)/);
-  if (standalone) return standalone[1];
-  return null;
-}
+import "../styles.css";
 
 export function OTPCard({ code }: { code: string }) {
   const [copied, setCopied] = useState(false);
@@ -36,14 +18,13 @@ export function OTPCard({ code }: { code: string }) {
   };
 
   return (
-    <div className="my-6 flex justify-center">
+    <div className="otp-scene my-7 flex justify-center overflow-hidden rounded-[18px] px-5 py-7 sm:px-8">
       <motion.div
         initial={{ opacity: 0, y: 12, filter: "blur(8px)" }}
         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         transition={{ duration: 0.45, ease: [0.2, 0.8, 0.2, 1] }}
         className="otp-card relative w-full max-w-[340px] overflow-hidden rounded-[14px] px-6 pb-6 pt-5"
       >
-        {/* Padlock */}
         <div className="mb-4 flex justify-center">
           <PadlockIcon />
         </div>
@@ -53,7 +34,6 @@ export function OTPCard({ code }: { code: string }) {
           We&rsquo;ve detected a unique passkey in this email. Copy it to use anywhere.
         </p>
 
-        {/* Digit boxes */}
         <div className="mt-5 flex items-center justify-center gap-2">
           {digits.map((digit, i) => (
             <div
@@ -65,7 +45,6 @@ export function OTPCard({ code }: { code: string }) {
           ))}
         </div>
 
-        {/* Copy button */}
         <button
           onClick={handleCopy}
           className="otp-copy-btn mt-5 flex h-10 w-full items-center justify-center gap-2 rounded-full text-[13px] font-semibold"
@@ -112,7 +91,6 @@ function PadlockIcon() {
           <stop offset="1" stopColor="#7a8088" />
         </linearGradient>
       </defs>
-      {/* Shackle */}
       <path
         d="M20 38 V24 C20 12 28 4 38 4 C48 4 56 12 56 24 V38"
         stroke="url(#shackle)"
@@ -120,10 +98,8 @@ function PadlockIcon() {
         strokeLinecap="round"
         fill="none"
       />
-      {/* Body / dial outer ring */}
       <circle cx="38" cy="56" r="26" fill="url(#dial)" />
       <circle cx="38" cy="56" r="22" fill="url(#dialFace)" />
-      {/* Tick marks */}
       {Array.from({ length: 24 }).map((_, i) => {
         const angle = (i * 360) / 24;
         const rad = (angle * Math.PI) / 180;
@@ -146,10 +122,8 @@ function PadlockIcon() {
           />
         );
       })}
-      {/* Center knob */}
       <circle cx="38" cy="56" r="6" fill="url(#knob)" />
       <circle cx="38" cy="55" r="1.6" fill="#1a1d22" />
-      {/* Pointer */}
       <path d="M38 36 L36 41 L40 41 Z" fill="#e8eaee" />
     </svg>
   );

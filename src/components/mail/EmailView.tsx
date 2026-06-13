@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Archive,
+  BadgeCheck,
+  Ban,
   Braces,
   File,
   FileArchive,
@@ -20,8 +22,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { EventMailCard } from "@/features/calendar";
+import { OTPCard, detectOtp } from "@/features/otp";
 import type { Email } from "./data";
-import { OTPCard, detectOtp } from "./OTPCard";
 
 export type EmailViewActions = {
   onReply?: (email: Email, body?: string) => void;
@@ -30,6 +32,9 @@ export type EmailViewActions = {
   onArchive?: (email: Email) => void;
   onTrash?: (email: Email) => void;
   onToggleStar?: (email: Email) => void;
+  onApproveSender?: (email: Email) => void;
+  onBlockSender?: (email: Email) => void;
+  onShowToast?: (message: string) => void;
 };
 
 export function EmailView({ email, actions = {} }: { email: Email | null; actions?: EmailViewActions }) {
@@ -201,6 +206,17 @@ export function EmailView({ email, actions = {} }: { email: Email | null; action
 
                 {email.event ? <EventMailCard event={email.event} /> : null}
 
+                <ProtocolStatus email={email} onShowToast={actions.onShowToast} />
+
+                {email.folder === "requests" ? (
+                  <SenderRequest
+                    sender={email.from}
+                    address={email.email}
+                    onApprove={() => actions.onApproveSender?.(email)}
+                    onBlock={() => actions.onBlockSender?.(email)}
+                  />
+                ) : null}
+
                 {(() => {
                   const otp = detectOtp(email.body);
                   return otp ? <OTPCard code={otp} /> : null;
@@ -291,6 +307,62 @@ export function EmailView({ email, actions = {} }: { email: Email | null; action
         )}
       </AnimatePresence>
     </section>
+  );
+}
+
+function ProtocolStatus({ email, onShowToast }: { email: Email; onShowToast?: (message: string) => void }) {
+  const verified = ["verified", "priority", "encrypted", "receipts"].includes(email.folder);
+  const proof = `${email.id.padStart(2, "0")}c7...${email.from.length.toString(16)}a9`;
+
+  return (
+    <div className="mt-5 flex flex-wrap items-center gap-2 rounded-lg border border-white/[0.08] bg-black/15 px-3 py-2">
+      <BadgeCheck className={cn("h-4 w-4", verified ? "text-emerald-300" : "text-amber-200")} />
+      <span className="text-xs font-medium text-foreground">
+        {verified ? "Stellar identity verified" : "Proof verification pending"}
+      </span>
+      <span className="font-mono text-[10px] text-muted-foreground">{proof}</span>
+      <button
+        onClick={() => onShowToast?.(`Proof ${proof} copied`)}
+        className="ml-auto rounded-md border border-white/10 bg-white/[0.04] px-2 py-1 text-[10px] text-muted-foreground transition hover:text-foreground"
+      >
+        Copy proof
+      </button>
+    </div>
+  );
+}
+
+function SenderRequest({
+  sender,
+  address,
+  onApprove,
+  onBlock,
+}: {
+  sender: string;
+  address: string;
+  onApprove: () => void;
+  onBlock: () => void;
+}) {
+  return (
+    <div className="mt-5 rounded-xl border border-amber-200/15 bg-amber-100/[0.035] p-4">
+      <p className="text-sm font-semibold text-foreground">Decide who can mail you</p>
+      <p className="mt-1 text-xs leading-5 text-muted-foreground">
+        {sender} ({address}) paid postage, but is not in your trusted sender list.
+      </p>
+      <div className="mt-3 flex gap-2">
+        <button
+          onClick={onApprove}
+          className="inline-flex items-center gap-2 rounded-lg bg-foreground px-3 py-2 text-xs font-semibold text-background transition hover:opacity-90"
+        >
+          <BadgeCheck className="h-3.5 w-3.5" /> Allow sender
+        </button>
+        <button
+          onClick={onBlock}
+          className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-xs text-muted-foreground transition hover:bg-white/[0.05] hover:text-foreground"
+        >
+          <Ban className="h-3.5 w-3.5" /> Block and refund
+        </button>
+      </div>
+    </div>
   );
 }
 

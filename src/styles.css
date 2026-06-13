@@ -272,39 +272,6 @@
     background: linear-gradient(135deg, oklch(1 0 0 / 0.07), transparent 38%, oklch(1 0 0 / 0.02));
     opacity: 0.85;
   }
-  /* OTP card — emulates screenshot reference: deep matte black panel
-     with a subtle inner light, soft border, and elevated shadow. */
-  .otp-card {
-    background:
-      radial-gradient(120% 70% at 50% 0%, oklch(0.32 0.005 270 / 0.55), transparent 55%),
-      linear-gradient(180deg, oklch(0.14 0.005 270), oklch(0.08 0.005 270));
-    border: 1px solid oklch(1 0 0 / 0.08);
-    box-shadow:
-      0 30px 60px -22px oklch(0 0 0 / 0.8),
-      0 10px 28px oklch(0 0 0 / 0.5),
-      inset 0 1px 0 oklch(1 0 0 / 0.10),
-      inset 0 -1px 0 oklch(0 0 0 / 0.5);
-  }
-  .otp-digit {
-    background: linear-gradient(180deg, oklch(0.20 0.005 270), oklch(0.13 0.005 270));
-    border: 1px solid oklch(1 0 0 / 0.09);
-    box-shadow:
-      inset 0 1px 0 oklch(1 0 0 / 0.10),
-      inset 0 -1px 0 oklch(0 0 0 / 0.55),
-      0 4px 10px oklch(0 0 0 / 0.45);
-  }
-  .otp-copy-btn {
-    background: linear-gradient(180deg, oklch(0.96 0.005 270), oklch(0.78 0.005 270));
-    color: oklch(0.16 0.005 270);
-    border: 1px solid oklch(1 0 0 / 0.4);
-    box-shadow:
-      inset 0 1px 0 oklch(1 0 0 / 0.7),
-      inset 0 -1px 0 oklch(0 0 0 / 0.2),
-      0 8px 20px oklch(0 0 0 / 0.45);
-    transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
-  }
-  .otp-copy-btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
-  .otp-copy-btn:active { transform: translateY(0); filter: brightness(0.96); }
   .mail-reader-title,
   .mail-reader-meta,
   .mail-reader-field,
