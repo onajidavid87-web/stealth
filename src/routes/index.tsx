@@ -23,6 +23,7 @@ import { CalendarWorkspace, useCalendar } from "@/features/calendar";
 import { FeedbackViewport } from "@/features/design-system/feedback/feedback-viewport";
 import { useFeedback } from "@/features/design-system/feedback/use-feedback";
 import { OnboardingModal, draftToMailboxPolicy, type OnboardingDraft } from "@/features/onboarding";
+import { ImportWizard, type ImportedContact } from "@/features/contacts";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -52,6 +53,7 @@ function MailApp() {
   }>({});
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [customFolder, setCustomFolder] = useState<string | null>(null);
   const [filters, setFilters] = useState<MailFilters>(defaultMailFilters);
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -102,6 +104,14 @@ function MailApp() {
   );
   const calendar = useCalendar();
   const { dismiss: dismissFeedback, items: feedbackItems, notify: showToast } = useFeedback();
+
+  const handleImportSave = useCallback(
+    (contacts: ImportedContact[]) => {
+      setImportOpen(false);
+      showToast(`${contacts.length} contact${contacts.length !== 1 ? "s" : ""} imported`);
+    },
+    [showToast],
+  );
 
   const folderCounts = useMemo(
     () =>
@@ -301,6 +311,7 @@ function MailApp() {
           <Topbar
             onOpenPalette={() => setPaletteOpen(true)}
             onOpenSettings={() => setSettingsOpen(true)}
+            onImportContacts={() => setImportOpen(true)}
             onShowToast={showToast}
             filters={filters}
             onFiltersChange={setFilters}
@@ -416,6 +427,12 @@ function MailApp() {
       />
 
       <FeedbackViewport items={feedbackItems} onDismiss={dismissFeedback} />
+
+      <ImportWizard
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        onSave={handleImportSave}
+      />
 
       <OnboardingModal open={showOnboarding} onComplete={handleOnboardingComplete} />
     </div>
