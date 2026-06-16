@@ -1,8 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { MemoryApiRepository } from "../../../src/server/api/memory-repository";
 import {
+  buildDeviceFingerprint,
   checkAccountLimit,
+  checkDeviceLimit,
   checkIpLimit,
   checkProofFailureLimit,
   checkRelayLimit,
@@ -82,5 +84,86 @@ describe("abuse service", () => {
     const result = await checkRelayLimit(repository, relayId);
     expect(result).toMatchObject({ allowed: false });
     expect(result.retryAfterSeconds).toBeTypeOf("number");
+  });
+
+  it("builds deterministic device fingerprints", () => {
+    const headers = {
+      userAgent: "  Mozilla/5.0  ",
+      acceptLanguage: "en-US,en;q=0.9",
+      acceptEncoding: "gzip, br",
+      ipPrefix: "203.0.113",
+    };
+    expect(buildDeviceFingerprint(headers)).toBe(buildDeviceFingerprint(headers));
+  });
+
+  it("changes fingerprint when the user agent changes", () => {
+    const base = {
+      acceptLanguage: "en-US,en;q=0.9",
+      acceptEncoding: "gzip, br",
+      ipPrefix: "203.0.113",
+    };
+    expect(
+      buildDeviceFingerprint({
+        ...base,
+        userAgent: "Mozilla/5.0",
+      }),
+    ).not.toBe(
+      buildDeviceFingerprint({
+        ...base,
+        userAgent: "curl/8.0.1",
+      }),
+    );
+  });
+
+  it("returns a valid fingerprint when all fields are missing", () => {
+    const fingerprint = buildDeviceFingerprint({});
+    expect(fingerprint).toMatch(/^[a-f0-9]{16}$/);
+  });
+
+  it("blocks a fingerprint after exceeding the device window max", async () => {
+    const repository = new MemoryApiRepository();
+    const fingerprint = buildDeviceFingerprint({
+      userAgent: "Mozilla/5.0",
+      acceptLanguage: "en-US",
+      acceptEncoding: "gzip",
+      ipPrefix: "203.0.113",
+    });
+
+    for (let i = 0; i < 30; i++) {
+      const result = await checkDeviceLimit(repository, fingerprint);
+      expect(result).toMatchObject({ allowed: true });
+    }
+
+    const blocked = await checkDeviceLimit(repository, fingerprint);
+    expect(blocked).toMatchObject({ allowed: false });
+    expect(blocked.retryAfterMs).toBe(60_000);
+  });
+
+  it("allows a fingerprint again after the device window resets", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-06-16T00:00:00.000Z"));
+
+    try {
+      const repository = new MemoryApiRepository();
+      const fingerprint = buildDeviceFingerprint({
+        userAgent: "Mozilla/5.0",
+        acceptLanguage: "en-US",
+        acceptEncoding: "gzip",
+        ipPrefix: "203.0.113",
+      });
+
+      for (let i = 0; i < 30; i++) {
+        const result = await checkDeviceLimit(repository, fingerprint);
+        expect(result).toMatchObject({ allowed: true });
+      }
+
+      vi.setSystemTime(new Date("2026-06-16T00:01:01.000Z"));
+
+      await expect(checkDeviceLimit(repository, fingerprint)).resolves.toMatchObject({
+        allowed: true,
+      });
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

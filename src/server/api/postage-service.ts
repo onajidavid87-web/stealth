@@ -2,6 +2,7 @@ import type { Postage } from "./domain";
 import { ApiError } from "./errors";
 import {
   checkAccountLimit,
+  checkDeviceLimit,
   checkIpLimit,
   checkRelayLimit,
   checkSenderRecipientLimit,
@@ -38,7 +39,7 @@ export async function submitPostage(
   repository: ApiRepository,
   input: Omit<Postage, "createdAt" | "status">,
   now = new Date(),
-  context: { ip?: string; relayId?: string } = {},
+  context: { ip?: string; relayId?: string; fingerprint?: string } = {},
 ) {
   const accountLimit = await checkAccountLimit(repository, input.sender);
   if (!accountLimit.allowed) {
@@ -51,6 +52,13 @@ export async function submitPostage(
   if (!ipLimit.allowed) {
     throw new ApiError(429, "rate_limited", "IP limit exceeded", {
       retryAfterSeconds: ipLimit.retryAfterSeconds,
+    });
+  }
+
+  const deviceLimit = await checkDeviceLimit(repository, context.fingerprint ?? "");
+  if (!deviceLimit.allowed) {
+    throw new ApiError(429, "rate_limited", "Device limit exceeded", {
+      retryAfterMs: deviceLimit.retryAfterMs,
     });
   }
 

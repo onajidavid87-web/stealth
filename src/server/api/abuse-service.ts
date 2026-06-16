@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 import type { ApiRepository } from "./repository";
 
 function rateLimited(retryAfterSeconds: number) {
@@ -24,6 +26,26 @@ async function checkStoredLimit(
   const count = await repository.getCounter(key);
   if (count >= max) return rateLimited(retryAfterSeconds);
   return { allowed: true };
+}
+
+function normalizeFingerprintField(value?: string) {
+  return value?.trim().toLowerCase().replace(/\s+/g, " ") ?? "";
+}
+
+export function buildDeviceFingerprint(headers: {
+  userAgent?: string;
+  acceptLanguage?: string;
+  acceptEncoding?: string;
+  ipPrefix?: string;
+}): string {
+  const payload = [
+    normalizeFingerprintField(headers.userAgent),
+    normalizeFingerprintField(headers.acceptLanguage),
+    normalizeFingerprintField(headers.acceptEncoding),
+    normalizeFingerprintField(headers.ipPrefix),
+  ].join("|");
+
+  return createHash("sha256").update(payload).digest("hex").slice(0, 16);
 }
 
 export async function checkAccountLimit(
@@ -68,4 +90,16 @@ export async function checkRelayLimit(
   relayId: string,
 ): Promise<{ allowed: boolean; retryAfterSeconds?: number }> {
   return checkIncrementedLimit(repository, `abuse:relay:${relayId}`, 500, 3600);
+}
+
+export async function checkDeviceLimit(
+  repository: ApiRepository,
+  fingerprint: string,
+  opts?: { windowMs?: number; max?: number },
+): Promise<{ allowed: boolean; retryAfterMs?: number }> {
+  const windowMs = opts?.windowMs ?? 60_000;
+  const max = opts?.max ?? 30;
+  const count = await repository.incrementCounter(`device:${fingerprint}`, windowMs / 1000);
+  if (count > max) return { allowed: false, retryAfterMs: windowMs };
+  return { allowed: true };
 }
