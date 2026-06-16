@@ -26,6 +26,7 @@ import type { MailFilters } from "./data";
 type TopbarProps = {
   onOpenPalette: () => void;
   onOpenSettings: () => void;
+  onOpenProofInspector: () => void;
   onImportContacts: () => void;
   onShowToast: (message: string) => void;
   onOpenShortcuts: () => void;
@@ -50,6 +51,7 @@ const quickActions: {
 export function Topbar({
   onOpenPalette,
   onOpenSettings,
+  onOpenProofInspector,
   onImportContacts,
   onShowToast,
   onOpenShortcuts,
@@ -330,6 +332,11 @@ export function Topbar({
             </AnimatePresence>,
             document.body,
           )}
+
+        {/* Proof Inspector */}
+        <IconBtn label="Proof Inspector" onClick={onOpenProofInspector} hint="I">
+          <ShieldCheck className="h-4 w-4" />
+        </IconBtn>
 
         {/* Settings */}
         <IconBtn label="Settings" onClick={onOpenSettings} hint=",">

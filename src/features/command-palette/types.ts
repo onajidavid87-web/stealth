@@ -32,7 +32,8 @@ export type CommandId =
   | "inspect-proof"
   | "settle-delivery"
   | "refund-postage"
-  | "relay-diagnostics";
+  | "relay-diagnostics"
+  | "open-proof-inspector";
 
 export type CommandGroupId = "message" | "protocol" | "delivery" | "navigation" | "app";
 
@@ -269,6 +270,16 @@ export const COMMANDS: CommandDescriptor[] = [
     icon: Settings,
     hint: "?",
     keywords: ["help", "keyboard", "overlay", "cheatsheet"],
+    availability: () => OK,
+  },
+  {
+    id: "open-proof-inspector",
+    group: "app",
+    label: "Open Proof Inspector",
+    description: "Search and inspect cryptographic proofs for mail delivery.",
+    icon: ShieldCheck,
+    hint: "I",
+    keywords: ["proof", "inspector", "hash", "diagnostic", "stellar", "verification"],
     availability: () => OK,
   },
 ];

@@ -62,6 +62,7 @@ import {
 import type { SnoozeState } from "@/components/mail/data";
 import { useIsMobile } from "@/lib/use-media-query";
 import { RequestsTriageBoard } from "@/features/requests";
+import { ProofInspectorModal } from "@/features/proof-inspector";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -123,6 +124,16 @@ function MailApp({ isDemoMode }: { isDemoMode?: boolean }) {
     type: string;
   } | null>(null);
   const [shortcutOverlayOpen, setShortcutOverlayOpen] = useState(false);
+  const [proofInspectorOpen, setProofInspectorOpen] = useState(false);
+  const [proofInspectorQuery, setProofInspectorQuery] = useState("");
+
+  const handleOpenMessageFromInspector = useCallback((email: Email) => {
+    setCustomFolder(null);
+    setFilters(defaultMailFilters);
+    setFolder(email.folder);
+    setSelectedId(email.id);
+    setSelectedIds([]);
+  }, []);
 
   const calendar = useCalendar();
   const { dismiss: dismissFeedback, items: feedbackItems, notify: showToast } = useFeedback();
@@ -470,7 +481,21 @@ function MailApp({ isDemoMode }: { isDemoMode?: boolean }) {
           );
           return;
         case "inspect-proof":
-          if (email) showToast(`Proof ${deriveProof(email)} copied`);
+          if (email) {
+            const messageHash = `0x${email.id.repeat(16).padEnd(64, "a")}d8c7e9`;
+            try {
+              navigator.clipboard.writeText(messageHash);
+              showToast(`Proof ${messageHash.slice(0, 10)}... copied`);
+            } catch {
+              // Ignore clipboard exceptions in test/headless environments
+            }
+            setProofInspectorQuery(messageHash);
+            setProofInspectorOpen(true);
+          }
+          return;
+        case "open-proof-inspector":
+          setProofInspectorQuery("");
+          setProofInspectorOpen(true);
           return;
         case "settle-delivery":
           if (email) {
@@ -538,6 +563,9 @@ function MailApp({ isDemoMode }: { isDemoMode?: boolean }) {
         case "open-settings":
           runCommand("open-settings");
           return;
+        case "open-proof-inspector":
+          runCommand("open-proof-inspector");
+          return;
       }
     },
     [openQuickSnooze, runCommand, selected],
@@ -597,6 +625,7 @@ function MailApp({ isDemoMode }: { isDemoMode?: boolean }) {
           <Topbar
             onOpenPalette={() => setPaletteOpen(true)}
             onOpenSettings={openSettings}
+            onOpenProofInspector={() => runCommand("open-proof-inspector")}
             onOpenShortcuts={() => setShortcutOverlayOpen(true)}
             onImportContacts={() => setImportOpen(true)}
             onShowToast={showToast}
@@ -739,6 +768,14 @@ function MailApp({ isDemoMode }: { isDemoMode?: boolean }) {
       <ShortcutOverlay
         open={shortcutOverlayOpen}
         onClose={() => setShortcutOverlayOpen(false)}
+      />
+      <ProofInspectorModal
+        open={proofInspectorOpen}
+        onClose={() => setProofInspectorOpen(false)}
+        emails={emails}
+        onOpenMessage={handleOpenMessageFromInspector}
+        onShowToast={showToast}
+        initialQuery={proofInspectorQuery}
       />
       <CalendarWorkspace
         open={calendarOpen}

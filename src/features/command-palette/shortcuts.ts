@@ -9,7 +9,8 @@ export type ShortcutActionId =
   | "approve-sender"
   | "block-sender"
   | "open-calendar"
-  | "open-settings";
+  | "open-settings"
+  | "open-proof-inspector";
 
 export type ShortcutDefinition = {
   id: ShortcutActionId;
@@ -110,6 +111,14 @@ export const SHORTCUT_DEFINITIONS: ShortcutDefinition[] = [
     keywords: ["help", "keyboard", "overlay", "shortcuts"],
     conflict: "Disabled while typing in text fields so question marks still work normally.",
   },
+  {
+    id: "open-proof-inspector",
+    commandId: "open-proof-inspector",
+    label: "Proof Inspector",
+    description: "Open the cryptographic proof inspector.",
+    keys: ["I"],
+    keywords: ["proof", "inspect", "ledger", "stellar"],
+  },
 ];
 
 export const SHORTCUTS_BY_COMMAND = new Map(
@@ -147,6 +156,7 @@ export function getShortcutAction(event: ShortcutEventLike): ShortcutActionId | 
   if (!hasCommandModifier && key === "c") return "open-calendar";
   if (!hasCommandModifier && event.key === ",") return "open-settings";
   if (!hasCommandModifier && event.key === "?") return "open-shortcuts";
+  if (!hasCommandModifier && key === "i") return "open-proof-inspector";
 
   return null;
 }
