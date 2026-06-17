@@ -94,6 +94,8 @@ the demo inbox.
   references real people or live addresses (a test enforces this).
 - `templates/templateSearch.ts` — `searchTemplates(templates, query)` is a ranked,
   case-insensitive substring search (name/subject hits outrank tag/description hits).
+- `docs/CAMPAIGN_COPY_RULES.md` — campaign copy rules for demo messages and internal
+  notes, with examples and a review checklist.
 - `templates/templateToDraft.ts` — pure, non-mutating helpers that map a template onto the
   existing `Draft` shape (`./types/draft`) and `insertTemplate` / `removeDraft` the dataset,
   with duplicate-insert validation.
