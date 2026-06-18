@@ -126,3 +126,9 @@ export {
   SenderPersonaEditor,
   validateSenderPersona,
 } from "./senderPersonas";
+
+export {
+  formatProofSummary,
+  validateProofRecord,
+} from "./proofFormatting";
+export { demoProofRecords } from "./fixtures/proofRecordFixtures";
