@@ -1,4 +1,5 @@
 import type { PresetScenario } from "../types";
+import { encryptedCampaignPreset } from "./encryptedCampaignPreset";
 
 export const PRESET_SCENARIOS: PresetScenario[] = [
   {
@@ -344,4 +345,5 @@ export const PRESET_SCENARIOS: PresetScenario[] = [
       },
     ],
   },
+  encryptedCampaignPreset,
 ];
