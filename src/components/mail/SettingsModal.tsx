@@ -111,7 +111,12 @@ export function SettingsModal({
               </button>
             </div>
 
-            <div className={cn("flex", activeTab === "audit" || activeTab === "changelog" ? "h-[520px]" : "min-h-[400px]")}>
+            <div
+              className={cn(
+                "flex",
+                activeTab === "audit" || activeTab === "changelog" ? "h-[520px]" : "min-h-[400px]",
+              )}
+            >
               {/* Sidebar tabs */}
               <div className="w-48 border-r border-white/5 p-3">
                 <nav className="space-y-1">
