@@ -87,23 +87,22 @@ export * from "./validationFixtures";
 export { ValidationResultsPanel } from "./ValidationResultsPanel";
 export type { ValidationResultsPanelProps } from "./ValidationResultsPanel";
 
-export { AdminSearchBar } from "./AdminSearchBar";
-export type { AdminSearchBarProps } from "./AdminSearchBar";
-
-export { CampaignMessageAssignmentPanel } from "./components/CampaignMessageAssignmentPanel";
-export { MessagePicker } from "./components/MessagePicker";
-
-export type { AssignableMessage, AssignmentState } from "./types/assignment";
-
+// Proof record editor, helpers, and formatting
+export { ProofRecordEditor } from "./ProofRecordEditor";
+export type { ProofRecordEditorProps } from "./ProofRecordEditor";
+export type {
+  ProofPostageStatus,
+  ProofRecord,
+  ProofRecordDraft,
+  ProofRecordFieldError,
+  ProofRecordValidationResult,
+} from "./types/proofRecord";
 export {
-  getAssignedMessages,
-  isMessageAssigned,
-  assignMessage,
-  unassignMessage,
-  getCampaignsForMessage,
-  assignToManyCampaigns,
-} from "./utils/assignmentHelpers";
-
+  mockMessageHash,
+  mockPaymentHash,
+  mockDiagnosticId,
+  mockSignature,
+} from "./mockHashHelpers";
 export {
   saveAssignments,
   loadAssignments,
@@ -120,3 +119,13 @@ export {
 } from "./fixtures/audienceSegmentFixtures";
 export { getSegmentById, resolveSegmentLabel, getSegmentToken } from "./utils/segmentHelpers";
 export { AUDIENCE_SEGMENT_TOKENS } from "./constants/displayTokens";
+  POSTAGE_STATUS_LABEL,
+  truncateHash,
+  formatLatency,
+  formatPostageStatus,
+  isValidMockHash,
+  isValidDiagnosticId,
+  formatProofSummary,
+  validateProofRecord,
+} from "./proofFormatting";
+export { demoProofRecords } from "./fixtures/proofRecordFixtures";
