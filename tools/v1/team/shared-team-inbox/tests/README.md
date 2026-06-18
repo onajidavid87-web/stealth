@@ -8,11 +8,11 @@ Folder-local test strategy for the Shared Team Inbox tool.
 
 ## Test Strategy
 
-| Layer | Scope | Framework |
-|---|---|---|
-| **Unit** | Services, storage adapters, and utility functions in isolation | Vitest |
-| **Integration** | Multi-step workflows using the in-memory storage adapter | Vitest |
-| **Manual** | UI behavior, visual regression, accessibility, end-to-end flows | Review checklist |
+| Layer           | Scope                                                           | Framework        |
+| --------------- | --------------------------------------------------------------- | ---------------- |
+| **Unit**        | Services, storage adapters, and utility functions in isolation  | Vitest           |
+| **Integration** | Multi-step workflows using the in-memory storage adapter        | Vitest           |
+| **Manual**      | UI behavior, visual regression, accessibility, end-to-end flows | Review checklist |
 
 ---
 
