@@ -1,7 +1,6 @@
 import type { CampaignSeedScenario } from "../types/campaignSeed";
 
-const SAFE_DEMO_RECIPIENT_PATTERN =
-  /^(?:[^@\s]+\*stealth\.demo|[^@\s]+@example\.(?:com|org))$/;
+const SAFE_DEMO_RECIPIENT_PATTERN = /^(?:[^@\s]+\*stealth\.demo|[^@\s]+@example\.(?:com|org))$/;
 
 /**
  * Convert a human-friendly scenario name into a deterministic slug.
@@ -24,9 +23,7 @@ export function isSafeDemoRecipient(recipient: string): boolean {
 /**
  * Validate a seed scenario for deterministic, review-safe campaign metadata.
  */
-export function validateCampaignSeedScenario(
-  scenario: CampaignSeedScenario,
-): string[] {
+export function validateCampaignSeedScenario(scenario: CampaignSeedScenario): string[] {
   const issues: string[] = [];
 
   if (!scenario.id.trim()) {

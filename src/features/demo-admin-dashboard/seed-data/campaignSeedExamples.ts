@@ -13,11 +13,7 @@ export const campaignSeedExamples: CampaignSeedScenario[] = [
     audience: "New signups",
     status: "ready",
     tags: ["campaign", "onboarding", "welcome"],
-    recipientHints: [
-      "welcome-team*stealth.demo",
-      "new-user@example.com",
-      "ops@example.org",
-    ],
+    recipientHints: ["welcome-team*stealth.demo", "new-user@example.com", "ops@example.org"],
     description:
       "A friendly onboarding flow that introduces the demo mailbox and core account actions.",
   },
@@ -29,11 +25,7 @@ export const campaignSeedExamples: CampaignSeedScenario[] = [
     audience: "Admin reviewers",
     status: "needs-review",
     tags: ["campaign", "security", "review"],
-    recipientHints: [
-      "security-team*stealth.demo",
-      "review@example.com",
-      "compliance@example.org",
-    ],
+    recipientHints: ["security-team*stealth.demo", "review@example.com", "compliance@example.org"],
     description:
       "A review-oriented security scenario used to validate copy, urgency, and audit language.",
   },
@@ -45,11 +37,7 @@ export const campaignSeedExamples: CampaignSeedScenario[] = [
     audience: "Existing subscribers",
     status: "draft",
     tags: ["campaign", "newsletter", "product"],
-    recipientHints: [
-      "updates*stealth.demo",
-      "subscribers@example.com",
-      "support@example.org",
-    ],
+    recipientHints: ["updates*stealth.demo", "subscribers@example.com", "support@example.org"],
     description:
       "A recurring newsletter scenario that exercises campaign metadata and preview layout.",
   },
