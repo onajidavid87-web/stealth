@@ -256,6 +256,20 @@ export { useDraftDataset } from "./hooks/useDraftDataset";
 export type { UseDraftDatasetResult } from "./hooks/useDraftDataset";
 export type { DraftDatasetAction, DraftDatasetState } from "./types/draftDataset";
 export { draftDatasetSample } from "./fixtures/draftDatasetFixtures";
+export {
+  emptyBulkSelection,
+  normalizeSelectedDraftIds,
+  getBulkSelectionSummary,
+  selectAllDrafts as selectAllBulkDrafts,
+  clearBulkSelection,
+  selectDraftRange,
+  updateBulkSelection,
+  invertBulkSelection,
+  formatBulkSelectionSummary,
+} from "./bulkSelection";
+export type { BulkSelectionMode, BulkSelectionState, BulkSelectionSummary } from "./bulkSelection";
+export { BulkSelectionToolbar } from "./components/BulkSelectionToolbar";
+export type { BulkSelectionToolbarProps } from "./components/BulkSelectionToolbar";
 
 // Draft dataset JSON export (issue #190): serializer, filename builder, button.
 export {
