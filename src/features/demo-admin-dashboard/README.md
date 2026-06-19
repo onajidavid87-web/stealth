@@ -91,6 +91,40 @@ unit test that checks determinism and safety rules without relying on any extern
 
 ---
 
+## Inbox seed dataset (`./fixtures/inboxSeedDataset.ts`)
+
+A local starter dataset (`DemoDataset`) that mirrors the current demo inbox
+while remaining fully owned by this admin-dashboard folder. Every address,
+hash, and timestamp is fake, deterministic, and safe for public-repository
+review.
+
+### Quick reference
+
+| Export | Description |
+|---|---|
+| `inboxSeedDataset` | Aggregate `DemoDataset` with 21 messages and 19 senders |
+| `inboxSeedMessages` | `DemoMessage[]` — the 21 seed messages |
+| `inboxSeedSenders` | `DemoSender[]` — the 19 unique senders |
+| `inboxSeedMetadata` | Precomputed counts, label/sender lists |
+| `inboxSeedFolderMap` | Message id → original inbox folder mapping |
+
+Helpers in `utils/inboxSeedHelpers.ts` provide pure, non-mutating queries
+(label/sender/folder filters, proof-status queries, etc.).
+
+### Validation
+
+`seedDatasetValidation.ts` exports `validateInboxSeedDataset(dataset)` which
+checks sender/recipient domain safety, duplicate IDs, proof record correctness,
+and mandatory field presence. A corresponding unit test validates the canonical
+dataset passes with zero errors and catches common regressions.
+
+### Usage notes
+
+See `docs/INBOX_SEED_DATASET.md` for a full walkthrough, safety guarantees,
+and instructions for adding or modifying entries.
+
+---
+
 ## Message templates (`./templates`)
 
 The **Templates** section renders `TemplatePicker`: an admin surface for choosing a
