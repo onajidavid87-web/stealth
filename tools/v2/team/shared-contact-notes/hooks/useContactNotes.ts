@@ -51,11 +51,7 @@ const initialState: NotesState = {
   error: null,
 };
 
-export function useContactNotes(
-  contactId: ContactId,
-  service: NoteService,
-  initialLoad = true,
-) {
+export function useContactNotes(contactId: ContactId, service: NoteService, initialLoad = true) {
   const [state, dispatch] = useReducer(notesReducer, initialState);
   const mountedRef = useRef(true);
 

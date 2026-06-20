@@ -5,11 +5,13 @@ This document covers the WCAG 2.1 AA accessibility measures implemented in the S
 ## Component Accessibility
 
 ### SharedContactNotes (Main Container)
+
 - Semantic HTML: `<header>`, `<main role="main">`
 - Page-level `<h1>` heading for screen reader context
 - Descriptive subtitle provides context for assistive technology
 
 ### ContactNotesEmptyState
+
 - `role="status"` announces empty state to screen readers
 - `aria-live="polite"` ensures announcement without interruption
 - `aria-label` provides clear context
@@ -17,18 +19,21 @@ This document covers the WCAG 2.1 AA accessibility measures implemented in the S
 - Button has explicit `aria-label`
 
 ### ContactNotesLoadingState
+
 - `role="status"` + `aria-busy="true"` indicates loading in progress
 - `aria-label` describes what is loading
 - Skeleton placeholders provide visual progress indication
 - Announcement text ("Loading notes...") for screen readers
 
 ### ContactNotesErrorState
+
 - `role="alert"` immediately announces error to screen readers
 - `Alert` component with `variant="destructive"` for visual distinction
 - Descriptive error message for troubleshooting
 - Retry button with `aria-label` for clear action
 
 ### ContactNotesList
+
 - Semantic `<ul>` / `<li>` structure for list navigation
 - `aria-label="Active notes"` / `aria-label="Archived notes"` sections
 - Active and archived notes visually separated with headings and borders
@@ -36,6 +41,7 @@ This document covers the WCAG 2.1 AA accessibility measures implemented in the S
 - "Add Note" button with accessible label
 
 ### ContactNoteEntry
+
 - `<article>` role for each note card
 - `aria-label` on article includes truncated content preview
 - Icon-only buttons have `aria-label` for screen readers
@@ -44,6 +50,7 @@ This document covers the WCAG 2.1 AA accessibility measures implemented in the S
 - Archived notes have reduced opacity + "Archived" badge for visual distinction
 
 ### ContactNoteForm
+
 - `<label htmlFor="note-content">` properly associates label with textarea
 - `aria-invalid` indicates validation errors
 - `aria-describedby` links error message to input
@@ -55,19 +62,21 @@ This document covers the WCAG 2.1 AA accessibility measures implemented in the S
 
 ## Keyboard Navigation
 
-| Key | Action |
-|-----|--------|
-| Tab | Navigate between interactive elements |
-| Enter / Space | Activate buttons |
-| Escape | Cancel form editing |
+| Key           | Action                                |
+| ------------- | ------------------------------------- |
+| Tab           | Navigate between interactive elements |
+| Enter / Space | Activate buttons                      |
+| Escape        | Cancel form editing                   |
 
 ## Focus Management
+
 - Textarea auto-focuses when form opens
 - Focus remains within active view
 - Interactive elements have visible focus rings (`focus-within:ring-2`, `focus:ring-2`)
 - All interactive elements are keyboard accessible (native `<button>` elements)
 
 ## Color and Contrast
+
 - Text colors use `text-slate-900` (headings), `text-slate-600` (body), `text-slate-500` (metadata)
 - Backgrounds use `bg-white`, `bg-slate-50` for sufficient contrast
 - Interactive states use blue (`text-blue-600`, `hover:text-blue-600`)
@@ -76,6 +85,7 @@ This document covers the WCAG 2.1 AA accessibility measures implemented in the S
 - No information conveyed by color alone
 
 ## Screen Reader Behavior
+
 - Loading state: "Loading contact notes" + skeleton placeholders
 - Empty state: "No shared notes" with guidance text
 - Error state: "Failed to load contact notes" + error details

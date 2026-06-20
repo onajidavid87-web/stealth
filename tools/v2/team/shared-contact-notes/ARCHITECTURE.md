@@ -228,15 +228,15 @@ constructor(seedNotes?: Note[], config?: Partial<ServiceConfig>)
 
 **Components:**
 
-| Component                  | Role              | States Handled        |
-| -------------------------- | ----------------- | --------------------- |
-| `SharedContactNotes`       | Main container    | loading/error/success |
-| `ContactNotesLoadingState` | Skeleton loader   | `aria-busy="true"`    |
-| `ContactNotesErrorState`   | Error display     | `role="alert"`        |
-| `ContactNotesEmptyState`   | Empty state CTA   | `role="status"`       |
-| `ContactNotesList`         | Note list         | Active/Archived split |
-| `ContactNoteEntry`         | Individual note   | Edit/Archive/Delete   |
-| `ContactNoteForm`          | Create/Edit form  | Inline validation     |
+| Component                  | Role             | States Handled        |
+| -------------------------- | ---------------- | --------------------- |
+| `SharedContactNotes`       | Main container   | loading/error/success |
+| `ContactNotesLoadingState` | Skeleton loader  | `aria-busy="true"`    |
+| `ContactNotesErrorState`   | Error display    | `role="alert"`        |
+| `ContactNotesEmptyState`   | Empty state CTA  | `role="status"`       |
+| `ContactNotesList`         | Note list        | Active/Archived split |
+| `ContactNoteEntry`         | Individual note  | Edit/Archive/Delete   |
+| `ContactNoteForm`          | Create/Edit form | Inline validation     |
 
 **Rules:**
 
@@ -251,16 +251,16 @@ constructor(seedNotes?: Note[], config?: Partial<ServiceConfig>)
 
 #### Responsibilities
 
-| Module                     | Owns              | Responsible For                         |
-| -------------------------- | ----------------- | --------------------------------------- |
-| `types.ts`                 | Data shapes       | Defining all contracts                  |
-| `errors.ts`                | Error taxonomy    | Error creation and serialization        |
-| `validation.ts`            | Input rules       | Validating user input                   |
-| `service.ts`               | In-memory store   | CRUD operations, state consistency      |
-| `hooks/useContactNotes.ts` | React state       | Bridging service to UI state management |
-| `components/`              | UI rendering      | All UI states and accessibility         |
-| `fixtures/notes.ts`        | Test data         | Providing deterministic seed data       |
-| `tests/`                   | Test coverage     | Validating all contract guarantees      |
+| Module                     | Owns            | Responsible For                         |
+| -------------------------- | --------------- | --------------------------------------- |
+| `types.ts`                 | Data shapes     | Defining all contracts                  |
+| `errors.ts`                | Error taxonomy  | Error creation and serialization        |
+| `validation.ts`            | Input rules     | Validating user input                   |
+| `service.ts`               | In-memory store | CRUD operations, state consistency      |
+| `hooks/useContactNotes.ts` | React state     | Bridging service to UI state management |
+| `components/`              | UI rendering    | All UI states and accessibility         |
+| `fixtures/notes.ts`        | Test data       | Providing deterministic seed data       |
+| `tests/`                   | Test coverage   | Validating all contract guarantees      |
 
 #### Data Flow
 

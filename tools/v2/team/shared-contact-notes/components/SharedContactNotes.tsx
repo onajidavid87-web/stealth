@@ -22,23 +22,13 @@ export function SharedContactNotes({
   authorId = "user-current",
   service: externalService,
 }: SharedContactNotesProps) {
-  const [service] = useState(
-    () => externalService ?? new NoteService(seedNotes, { delayMs: 600 }),
-  );
+  const [service] = useState(() => externalService ?? new NoteService(seedNotes, { delayMs: 600 }));
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [editingNote, setEditingNote] = useState<Note | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const {
-    status,
-    notes,
-    error,
-    loadNotes,
-    createNote,
-    updateNote,
-    deleteNote,
-    archiveNote,
-  } = useContactNotes(contactId, service, true);
+  const { status, notes, error, loadNotes, createNote, updateNote, deleteNote, archiveNote } =
+    useContactNotes(contactId, service, true);
 
   const handleCreateNote = useCallback(() => {
     setViewMode("create");
@@ -95,9 +85,7 @@ export function SharedContactNotes({
     <div className="w-full max-w-3xl mx-auto p-6 bg-white rounded-lg">
       <header className="mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Shared Contact Notes</h1>
-        <p className="text-slate-600 text-sm mt-1">
-          Add and manage shared notes for this contact
-        </p>
+        <p className="text-slate-600 text-sm mt-1">Add and manage shared notes for this contact</p>
       </header>
 
       <main role="main" className="space-y-4">

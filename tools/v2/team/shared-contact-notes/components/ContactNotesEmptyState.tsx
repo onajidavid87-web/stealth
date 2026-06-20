@@ -18,10 +18,7 @@ export function ContactNotesEmptyState({ onCreateNote }: ContactNotesEmptyStateP
       <p className="text-slate-600 text-center max-w-sm mb-6">
         No notes have been added for this contact yet. Create one to share context with your team.
       </p>
-      <Button
-        onClick={onCreateNote}
-        aria-label="Add a new contact note"
-      >
+      <Button onClick={onCreateNote} aria-label="Add a new contact note">
         Add Note
       </Button>
     </div>

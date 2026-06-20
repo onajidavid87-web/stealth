@@ -28,14 +28,10 @@ export function ContactNotesList({
           <h2 className="text-lg font-semibold text-slate-900">
             Notes
             {notes.length > 0 && (
-              <span className="text-sm font-normal text-slate-500 ml-2">
-                ({notes.length})
-              </span>
+              <span className="text-sm font-normal text-slate-500 ml-2">({notes.length})</span>
             )}
           </h2>
-          <p className="text-sm text-slate-500 mt-1">
-            Shared context visible to all team members
-          </p>
+          <p className="text-sm text-slate-500 mt-1">Shared context visible to all team members</p>
         </div>
         <Button onClick={onCreateNote} aria-label="Add a new note">
           <Plus className="h-4 w-4 mr-2" aria-hidden="true" />
@@ -45,9 +41,7 @@ export function ContactNotesList({
 
       {activeNotes.length > 0 && (
         <div className="space-y-2" role="list" aria-label="Active notes">
-          <h3 className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-            Active
-          </h3>
+          <h3 className="text-xs font-medium text-slate-500 uppercase tracking-wider">Active</h3>
           {activeNotes.map((note) => (
             <div key={note.id} role="listitem">
               <ContactNoteEntry
