@@ -42,6 +42,8 @@ export type SafeRewriteResult =
   | { status: "error"; code: GuardErrorCode; message: string };
 
 // Control characters (except tab and newline) can hide or corrupt content.
+// eslint-disable-next-line no-control-regex
+// eslint-disable-next-line no-control-regex
 const CONTROL_CHARACTERS = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g;
 // Zero-width and BOM characters can smuggle invisible payloads into text.
 const INVISIBLE_CHARACTERS = /[\u200b-\u200d\u2060\ufeff]/g;
