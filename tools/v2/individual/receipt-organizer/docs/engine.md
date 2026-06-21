@@ -1,14 +1,17 @@
 # Receipt Organizer Core Engine
 
 ## Overview
+
 The core engine provides folder-local services for classifying and organizing receipts.
 
 ## API Surface
 
 ### `classifyReceipt(receipt: Receipt): ReceiptCategory`
+
 Determines the category of a receipt based on its merchant name.
 
 ### `organizeReceipts(receipts: Receipt[]): OrganizeResult`
+
 Takes a list of receipts, applies categorization to those that are uncategorized, and computes summary statistics.
 
 ## State Documentation
