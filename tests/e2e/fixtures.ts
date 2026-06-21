@@ -95,11 +95,7 @@ export class ApiHelper {
   // -----------------------------------------------------------------------
   // Receipt helpers
   // -----------------------------------------------------------------------
-  async createReceipt(
-    messageId = MSG_ID,
-    recipient = ACTOR,
-    sender = SENDER,
-  ) {
+  async createReceipt(messageId = MSG_ID, recipient = ACTOR, sender = SENDER) {
     return this.page.request.post("/api/v1/receipts/", {
       headers: this.headers(sender),
       data: { messageId, recipient, sender },
