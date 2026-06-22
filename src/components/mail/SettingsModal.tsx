@@ -119,8 +119,9 @@ export function SettingsModal({
                         onClick={() => setActiveTab(tab.id)}
                         aria-selected={isActive}
                         role="tab"
-                        id={`tab-${tab.id}`}
-                        aria-controls={`tabpanel-${tab.id}`}
+                        id={`settings-tab-${tab.id}`}
+                        aria-controls={`settings-panel-${tab.id}`}
+                        tabIndex={isActive ? 0 : -1}
                         className={cn(
                           "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition focus-visible:ring-2 focus-visible:ring-emerald-400",
                           isActive
@@ -139,8 +140,8 @@ export function SettingsModal({
               <div
                 className="flex-1 p-5 max-h-[450px] overflow-y-auto"
                 role="tabpanel"
-                id={`tabpanel-${activeTab}`}
-                aria-labelledby={`tab-${activeTab}`}
+                id={`settings-panel-${activeTab}`}
+                aria-labelledby={`settings-tab-${activeTab}`}
               >
                 {activeTab === "account" && <AccountSettings />}
                 {activeTab === "appearance" && (
