@@ -18,10 +18,7 @@ function isElement(n: unknown): n is ReactElement {
   );
 }
 
-function findInTree(
-  node: any,
-  predicate: (el: any) => boolean,
-): any {
+function findInTree(node: any, predicate: (el: any) => boolean): any {
   if (!isElement(node)) return null;
   if (predicate(node)) return node;
   const children = (node as any).props.children;
