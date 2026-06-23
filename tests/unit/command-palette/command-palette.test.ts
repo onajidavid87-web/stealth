@@ -127,11 +127,14 @@ describe("buildCommands availability", () => {
   it("enables/disables refund based on paid labels or folder states", () => {
     // Paid request: enabled
     expect(
-      availability(ctxOf({ email: email({ folder: "requests", labels: ["Paid"] }) })).get("refund-postage")?.enabled,
+      availability(ctxOf({ email: email({ folder: "requests", labels: ["Paid"] }) })).get(
+        "refund-postage",
+      )?.enabled,
     ).toBe(true);
     // Free inbox message: disabled
     expect(
-      availability(ctxOf({ email: email({ folder: "inbox", labels: [] }) })).get("refund-postage")?.enabled,
+      availability(ctxOf({ email: email({ folder: "inbox", labels: [] }) })).get("refund-postage")
+        ?.enabled,
     ).toBe(false);
     // Spam message: enabled (can refund senders turned away)
     expect(
@@ -171,11 +174,15 @@ describe("fuzzyScore", () => {
 
   it("matches case-insensitively", () => {
     expect(fuzzyScore("COMPOSE", "Compose new email")).toBeGreaterThan(0);
-    expect(fuzzyScore("COMPOSE", "Compose new email")).toEqual(fuzzyScore("compose", "Compose new email"));
+    expect(fuzzyScore("COMPOSE", "Compose new email")).toEqual(
+      fuzzyScore("compose", "Compose new email"),
+    );
   });
 
   it("ignores leading and trailing whitespace", () => {
-    expect(fuzzyScore("  compose  ", "Compose new email")).toEqual(fuzzyScore("compose", "Compose new email"));
+    expect(fuzzyScore("  compose  ", "Compose new email")).toEqual(
+      fuzzyScore("compose", "Compose new email"),
+    );
   });
 
   it("returns -1 when the query is longer than the target text", () => {
@@ -193,7 +200,13 @@ describe("fuzzyScore", () => {
 describe("buildPaletteModel", () => {
   const emails = [
     email({ id: "1", from: "Lina Park", email: "lina*vantage.studio", subject: "Design Sync" }),
-    email({ id: "5", from: "Unknown Sender", email: "GCKN...N4XQ", folder: "requests", subject: "Postage Due" }),
+    email({
+      id: "5",
+      from: "Unknown Sender",
+      email: "GCKN...N4XQ",
+      folder: "requests",
+      subject: "Postage Due",
+    }),
     email({ id: "6", from: "Lina Park", email: "lina*vantage.studio", subject: "Re: Design Sync" }),
   ];
 
@@ -220,7 +233,9 @@ describe("buildPaletteModel", () => {
   it("fuzzy-finds settings by label or keywords", () => {
     const sections = buildPaletteModel(ctxOf(), "theme", emails);
     const settings = sections.find((s) => s.id === "settings");
-    expect(settings?.rows.some((r) => r.type === "setting" && r.setting.id === "appearance")).toBe(true);
+    expect(settings?.rows.some((r) => r.type === "setting" && r.setting.id === "appearance")).toBe(
+      true,
+    );
   });
 
   it("filters out duplicate senders by email address", () => {
