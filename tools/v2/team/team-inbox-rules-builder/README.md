@@ -1,52 +1,51 @@
 # Team Inbox Rules Builder
 
-This folder is the isolated workspace for the Team Inbox Rules Builder tool.
+A self-contained team tool for visually building and managing automated inbox rules.
 
 ## Ownership boundary
 
 All work for this tool must stay inside:
 
-```
-.tools/v2/team/team-inbox-rules-builder/
+```text
+tools/v2/team/team-inbox-rules-builder/
 ```
 
 Do not wire this tool into the main app, routing, inbox architecture, wallet core, Stellar core, database schema, or existing design system unless a future integration issue explicitly allows it.
 
-## What this tool provides
+## Folder Structure
 
-A folder-local rule engine for evaluating inbox automation rules against message context.
-
-### Included files
-
-- `src/rulesEngine.ts` — core rule evaluation logic
-- `src/fixtures.ts` — deterministic rule and message examples
-- `src/rulesEngine.test.ts` — unit tests covering rule matching and evaluation
-
-## Local validation
-
-Run only the folder-local tests from the repo root:
-
-```bash
-cd c:/Users/HP/gfox/stealth
-npx vitest run tools/v2/team/team-inbox-rules-builder/src/rulesEngine.test.ts
+```
+team-inbox-rules-builder/
+├── types/              # TypeScript definitions
+│   ├── rules.ts        # Rule, condition, action types
+│   └── index.ts
+├── services/           # Business logic
+│   ├── rule-engine.service.ts   # Rule evaluation and execution
+│   ├── rule-storage.service.ts  # In-memory rule storage
+│   └── index.ts
+├── hooks/              # React state management
+│   ├── use-rules.ts             # Rule CRUD operations
+│   ├── use-rule-evaluation.ts   # Rule evaluation hook
+│   └── index.ts
+├── components/         # UI components
+│   ├── rule-list.tsx            # Browse and manage rules
+│   ├── rule-builder.tsx         # Create/edit rules
+│   ├── rule-preview.tsx         # Preview rule behavior
+│   ├── empty-state.tsx          # No rules state
+│   ├── loading-state.tsx        # Loading state
+│   ├── error-state.tsx          # Error state
+│   ├── success-state.tsx        # Success confirmation
+│   └── index.ts
+├── fixtures/           # Mock data
+│   └── rules.fixtures.ts
+├── tests/              # Test workspaces
+│   └── test-plan.md
+├── docs/               # Documentation
+│   ├── ARCHITECTURE.md          # Architecture guide
+│   ├── ACCESSIBILITY.md         # Accessibility guide
+│   └── VISUAL_STYLE.md          # Visual design guide
+├── specs.md            # Issue categories and contributor notes
+└── README.md           # This file
 ```
 
-## Review notes
-
-Reviewers should verify that:
-
-- enabled rules are matched against message fields correctly
-- disabled rules are ignored
-- subject keyword matching, tag inclusion, and project equality are handled deterministically
-- the engine returns only matching rules and their actions
-- the implementation is isolated to this folder and does not touch app-wide code
-
-## Known limitations
-
-- This issue implements only the isolated core rule engine, not UI or app integration.
-- There are no live network calls or production data dependencies.
-- The rule language is intentionally minimal to keep the core behavior reviewable.
-
-## Follow-up
-
-Future issues may add a UI, rule editor, persistence, or integration with mail events.
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the complete architecture plan.
