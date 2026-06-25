@@ -187,6 +187,11 @@ export * from "./validation";
 export * from "./validationFixtures";
 export { ValidationResultsPanel } from "./ValidationResultsPanel";
 export type { ValidationResultsPanelProps } from "./ValidationResultsPanel";
+export * from "./publishChecklist-types";
+export * from "./publishChecklist";
+export * from "./publishChecklistFixtures";
+export { PublishChecklist } from "./components/PublishChecklist";
+export type { PublishChecklistProps } from "./components/PublishChecklist";
 
 // Proof record editor, helpers, and formatting
 export { ProofRecordEditor } from "./ProofRecordEditor";
