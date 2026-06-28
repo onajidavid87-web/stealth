@@ -16,7 +16,10 @@ function isElement(node: unknown): node is TypedElement {
   return typeof node === "object" && node !== null && "props" in node;
 }
 
-function findInTree(node: ReactNode, predicate: (element: TypedElement) => boolean): TypedElement | null {
+function findInTree(
+  node: ReactNode,
+  predicate: (element: TypedElement) => boolean,
+): TypedElement | null {
   if (!isElement(node)) return null;
   if (predicate(node)) return node;
   const children = node.props.children;
@@ -60,12 +63,16 @@ describe("EmailToneRewriterEmpty", () => {
   it("renders an accessible tone radio group", () => {
     const el = EmailToneRewriterEmpty(emptyProps);
     expect(hasElement(el, (node) => node.type === "fieldset")).toBe(true);
-    expect(hasElement(el, (node) => node.props.type === "radio" && node.props.value === "formal")).toBe(true);
+    expect(
+      hasElement(el, (node) => node.props.type === "radio" && node.props.value === "formal"),
+    ).toBe(true);
   });
 
   it("disables submit when the body is empty", () => {
     const el = EmailToneRewriterEmpty({ ...emptyProps, bodyText: "   " });
-    expect(hasElement(el, (node) => node.props.type === "button" && node.props.disabled === true)).toBe(true);
+    expect(
+      hasElement(el, (node) => node.props.type === "button" && node.props.disabled === true),
+    ).toBe(true);
   });
 });
 
@@ -79,7 +86,11 @@ describe("EmailToneRewriterLoading", () => {
 
 describe("EmailToneRewriterError", () => {
   it("uses alert semantics and optional retry", () => {
-    const el = EmailToneRewriterError({ code: "empty-body", message: "Cannot rewrite.", onRetry: () => {} });
+    const el = EmailToneRewriterError({
+      code: "empty-body",
+      message: "Cannot rewrite.",
+      onRetry: () => {},
+    });
     expect(el.props.role).toBe("alert");
     expect(hasElement(el, (node) => node.props.type === "button")).toBe(true);
   });
@@ -93,13 +104,20 @@ describe("EmailToneRewriterSuccess", () => {
     if (!rewrite) throw new Error("fixture should rewrite");
     const el = EmailToneRewriterSuccess({ rewrite });
     expect(el.type).toBe("article");
-    expect(hasElement(el, (node) => node.props["aria-label"] === "Rewritten email body" && node.props.tabIndex === 0)).toBe(true);
+    expect(
+      hasElement(
+        el,
+        (node) => node.props["aria-label"] === "Rewritten email body" && node.props.tabIndex === 0,
+      ),
+    ).toBe(true);
   });
 
   it("documents disabled action scope in the success state", () => {
     if (!rewrite) throw new Error("fixture should rewrite");
     const el = EmailToneRewriterSuccess({ rewrite });
-    expect(hasElement(el, (node) => String(node.props.children).includes("Send disabled"))).toBe(true);
+    expect(hasElement(el, (node) => String(node.props.children).includes("Send disabled"))).toBe(
+      true,
+    );
   });
 });
 

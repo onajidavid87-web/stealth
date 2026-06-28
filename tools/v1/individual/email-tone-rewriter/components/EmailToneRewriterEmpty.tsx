@@ -91,17 +91,11 @@ export function EmailToneRewriterEmpty({
           rows={8}
         />
         <p id="etr-body-hint" className="etr-hint">
-          Keyboard shortcut: Ctrl+Enter or Command+Enter rewrites when the draft body is not
-          empty.
+          Keyboard shortcut: Ctrl+Enter or Command+Enter rewrites when the draft body is not empty.
         </p>
       </div>
 
-      <button
-        type="button"
-        onClick={onSubmit}
-        disabled={!canSubmit}
-        aria-disabled={!canSubmit}
-      >
+      <button type="button" onClick={onSubmit} disabled={!canSubmit} aria-disabled={!canSubmit}>
         Rewrite tone
       </button>
     </section>
