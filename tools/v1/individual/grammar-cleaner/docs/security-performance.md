@@ -28,14 +28,14 @@ This prevents malformed values from reaching regex-heavy grammar rules and keeps
 
 Current limits are intentionally conservative for an individual V1 launch tool:
 
-| Input area | Limit | Reason |
-| --- | ---: | --- |
-| Subject | 200 characters | Avoid spending time on oversized metadata. |
-| Body | 50,000 characters | Keep regex passes bounded for large emails. |
-| Body | 8,000 words | Avoid pathological whitespace-heavy or token-heavy messages. |
-| Attachments | 0 accepted | This tool does not inspect attachments. |
-| Team members | 1 accepted | Individual tier only; team datasets are out of scope. |
-| Histories | 0 accepted | Thread/message history processing needs a future integration issue. |
+| Input area   |             Limit | Reason                                                              |
+| ------------ | ----------------: | ------------------------------------------------------------------- |
+| Subject      |    200 characters | Avoid spending time on oversized metadata.                          |
+| Body         | 50,000 characters | Keep regex passes bounded for large emails.                         |
+| Body         |       8,000 words | Avoid pathological whitespace-heavy or token-heavy messages.        |
+| Attachments  |        0 accepted | This tool does not inspect attachments.                             |
+| Team members |        1 accepted | Individual tier only; team datasets are out of scope.               |
+| Histories    |        0 accepted | Thread/message history processing needs a future integration issue. |
 
 Large email threads should be trimmed by the caller to the message body the user is actively editing. Attachments, prior replies, quoted threads, and team member lists should be summarized elsewhere or handled by a future batch-processing feature rather than passed to this tool.
 
