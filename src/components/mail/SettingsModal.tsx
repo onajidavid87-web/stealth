@@ -19,7 +19,7 @@ import {
   User,
   X,
 } from "lucide-react";
-import { useState, useEffect, useRef, type CSSProperties } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback, type CSSProperties } from "react";
 import { Surface } from "@/features/design-system";
 import { cn } from "@/lib/utils";
 import { SHORTCUT_DEFINITIONS } from "@/features/command-palette";
@@ -210,10 +210,6 @@ export function SettingsModal({
                         aria-controls={`settings-panel-${tab.id}`}
                         tabIndex={isActive ? 0 : -1}
                         onClick={() => setActiveTab(tab.id)}
-                        aria-selected={isActive}
-                        role="tab"
-                        id={`tab-${tab.id}`}
-                        aria-controls={`tabpanel-${tab.id}`}
                         className={cn(
                           "glow-ring flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition active:scale-[0.98]",
                           isActive
