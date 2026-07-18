@@ -8,7 +8,13 @@
 import { describe, it, expect } from "vitest";
 import { createWatchlistService } from "../services/watchlist.service";
 import { createWatchlistContract } from "../services/execution-contract";
-import { WatchlistErrorCode, ok, fail, type WatchlistResult } from "../contract";
+import {
+  WatchlistErrorCode,
+  ok,
+  fail,
+  type WatchlistContractOutput,
+  type WatchlistResult,
+} from "../contract";
 import { VALID_ADD_INPUT, VALID_UPDATE_RISK_INPUT } from "../fixtures/contract.fixtures";
 
 function makeContract() {
@@ -37,8 +43,7 @@ describe("watchlist execution contract — operations", () => {
     const contract = makeContract();
     const res = await contract.execute({ operation: "list" });
     expect(res.ok).toBe(true);
-    if (res.ok) {
-      expect(res.value.operation).toBe("list");
+    if (res.ok && res.value.operation === "list") {
       expect(Array.isArray(res.value.entries)).toBe(true);
       expect(res.value.entries.length).toBeGreaterThan(0);
     }
@@ -48,7 +53,7 @@ describe("watchlist execution contract — operations", () => {
     const contract = makeContract();
     const res = await contract.execute({ operation: "list", filter: { riskLevel: "high" } });
     expect(res.ok).toBe(true);
-    if (res.ok) {
+    if (res.ok && res.value.operation === "list") {
       // Every returned entry must be high-risk (the filter is honored).
       expect(res.value.entries.length).toBeGreaterThan(0);
       expect(res.value.entries.every((e) => e.riskLevel === "high")).toBe(true);
@@ -59,8 +64,7 @@ describe("watchlist execution contract — operations", () => {
     const contract = makeContract();
     const res = await contract.execute({ operation: "add", input: VALID_ADD_INPUT });
     expect(res.ok).toBe(true);
-    if (res.ok) {
-      expect(res.value.operation).toBe("add");
+    if (res.ok && res.value.operation === "add") {
       expect(res.value.entry.id).toMatch(/^watch-\d{3}$/);
       expect(res.value.entry.status).toBe("active");
       expect(res.value.entry.riskLevel).toBe("high");
@@ -74,8 +78,7 @@ describe("watchlist execution contract — operations", () => {
       input: VALID_UPDATE_RISK_INPUT,
     });
     expect(res.ok).toBe(true);
-    if (res.ok) {
-      expect(res.value.operation).toBe("updateRisk");
+    if (res.ok && res.value.operation === "updateRisk") {
       expect(res.value.entry.id).toBe("watch-001");
       expect(res.value.entry.riskLevel).toBe("medium");
     }
@@ -85,8 +88,7 @@ describe("watchlist execution contract — operations", () => {
     const contract = makeContract();
     const res = await contract.execute({ operation: "dismiss", id: "watch-002" });
     expect(res.ok).toBe(true);
-    if (res.ok) {
-      expect(res.value.operation).toBe("dismiss");
+    if (res.ok && res.value.operation === "dismiss") {
       expect(res.value.entry.status).toBe("dismissed");
     }
   });
@@ -95,8 +97,7 @@ describe("watchlist execution contract — operations", () => {
     const contract = makeContract();
     const res = await contract.execute({ operation: "remove", id: "watch-003" });
     expect(res.ok).toBe(true);
-    if (res.ok) {
-      expect(res.value.operation).toBe("remove");
+    if (res.ok && res.value.operation === "remove") {
       expect(res.value.removedId).toBe("watch-003");
     }
   });
@@ -105,8 +106,7 @@ describe("watchlist execution contract — operations", () => {
     const contract = makeContract();
     const res = await contract.execute({ operation: "metrics" });
     expect(res.ok).toBe(true);
-    if (res.ok) {
-      expect(res.value.operation).toBe("metrics");
+    if (res.ok && res.value.operation === "metrics") {
       expect(res.value.metrics.total).toBeGreaterThan(0);
       expect(res.value.metrics.highRisk).toBeGreaterThan(0);
     }
@@ -116,7 +116,7 @@ describe("watchlist execution contract — operations", () => {
 describe("watchlist execution contract — error handling", () => {
   it("dismiss of an unknown id maps to EntryNotFound (no throw)", async () => {
     const contract = makeContract();
-    const res: WatchlistResult<never> = await contract.execute({
+    const res: WatchlistResult<WatchlistContractOutput> = await contract.execute({
       operation: "dismiss",
       id: "watch-999",
     });
@@ -128,7 +128,7 @@ describe("watchlist execution contract — error handling", () => {
 
   it("remove of an unknown id maps to EntryNotFound (no throw)", async () => {
     const contract = makeContract();
-    const res: WatchlistResult<never> = await contract.execute({
+    const res: WatchlistResult<WatchlistContractOutput> = await contract.execute({
       operation: "remove",
       id: "watch-999",
     });
@@ -141,7 +141,9 @@ describe("watchlist execution contract — error handling", () => {
   it("simulated backend failure maps to BackendFailure (no throw)", async () => {
     const service = createWatchlistService({ failureRate: 1 });
     const contract = createWatchlistContract(service);
-    const res: WatchlistResult<never> = await contract.execute({ operation: "metrics" });
+    const res: WatchlistResult<WatchlistContractOutput> = await contract.execute({
+      operation: "metrics",
+    });
     expect(res.ok).toBe(false);
     if (!res.ok) {
       expect(res.error).toBe(WatchlistErrorCode.BackendFailure);
