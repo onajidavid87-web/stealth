@@ -16,16 +16,8 @@ export type {
 } from "./types";
 
 // Contract + service
-export {
-  createTimelineContract,
-} from "./services/timeline.service";
-export {
-  TimelineErrorCode,
-  buildClientTimeline,
-  getClientThread,
-  ok,
-  fail,
-} from "./contract";
+export { createTimelineContract } from "./services/timeline.service";
+export { TimelineErrorCode, buildClientTimeline, getClientThread, ok, fail } from "./contract";
 export type {
   TimelineContract,
   TimelineOperation,
@@ -34,8 +26,4 @@ export type {
 } from "./contract";
 
 // Fixtures
-export {
-  TIMELINE_FIXTURES,
-  ACME_MESSAGES,
-  EMPTY_MESSAGES,
-} from "./fixtures";
+export { TIMELINE_FIXTURES, ACME_MESSAGES, EMPTY_MESSAGES } from "./fixtures";

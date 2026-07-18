@@ -52,10 +52,7 @@ export function ok<T>(value: T): TimelineResult<T> {
 }
 
 /** Typed error outcome. */
-export function fail<T = never>(
-  error: TimelineErrorCode,
-  message: string,
-): TimelineResult<T> {
+export function fail<T = never>(error: TimelineErrorCode, message: string): TimelineResult<T> {
   return { ok: false, error, message };
 }
 
@@ -81,15 +78,11 @@ export function buildClientTimeline(
   }
 
   const dir = order === "desc" ? -1 : 1;
-  const threads: TimelineThread[] = [...byThread.entries()].map(
-    ([threadId, msgs]) => ({
-      threadId,
-      clientId,
-      messages: [...msgs].sort(
-        (a, b) => dir * (Date.parse(a.timestamp) - Date.parse(b.timestamp)),
-      ),
-    }),
-  );
+  const threads: TimelineThread[] = [...byThread.entries()].map(([threadId, msgs]) => ({
+    threadId,
+    clientId,
+    messages: [...msgs].sort((a, b) => dir * (Date.parse(a.timestamp) - Date.parse(b.timestamp))),
+  }));
 
   // Order threads by their earliest message timestamp.
   threads.sort((a, b) => {
@@ -109,12 +102,8 @@ export function buildClientTimeline(
  */
 export function getClientThread(input: GetThreadInput): TimelineThread | null {
   const { clientId, threadId, messages } = input;
-  const owned = messages.filter(
-    (m) => m.clientId === clientId && m.threadId === threadId,
-  );
+  const owned = messages.filter((m) => m.clientId === clientId && m.threadId === threadId);
   if (owned.length === 0) return null;
-  const sorted = [...owned].sort(
-    (a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp),
-  );
+  const sorted = [...owned].sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp));
   return { threadId, clientId, messages: sorted };
 }

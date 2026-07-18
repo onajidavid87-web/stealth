@@ -16,11 +16,7 @@ import {
   fail,
   type TimelineResult,
 } from "../contract";
-import {
-  TIMELINE_FIXTURES,
-  ACME_MESSAGES,
-  EMPTY_MESSAGES,
-} from "../fixtures";
+import { TIMELINE_FIXTURES, ACME_MESSAGES, EMPTY_MESSAGES } from "../fixtures";
 
 describe("timeline contract — result helpers", () => {
   it("ok() produces a typed success result", () => {
@@ -65,9 +61,7 @@ describe("timeline contract — buildTimeline", () => {
     });
     expect(res.ok).toBe(true);
     if (res.ok && res.value.operation === "buildTimeline") {
-      const onboarding = res.value.timeline.threads.find(
-        (t) => t.threadId === "thread-onboarding",
-      );
+      const onboarding = res.value.timeline.threads.find((t) => t.threadId === "thread-onboarding");
       expect(onboarding?.messages.map((m) => m.id)).toEqual(["m-1", "m-3"]);
     }
   });
